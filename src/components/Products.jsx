@@ -1,12 +1,22 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, Col, Container, Pagination, Row } from 'react-bootstrap';
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Pagination,
+  Row,
+  Modal,
+} from 'react-bootstrap';
 
 function Prods() {
   const [products, setProds] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(3);
   const [isLoading, setIsLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     async function getProds() {
@@ -44,6 +54,13 @@ function Prods() {
     );
   });
 
+  const handleCloseModal = () => setShowModal(false);
+
+  const handleOpenModal = (product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
   return (
     <section className="products py-5">
       <h3 className="text-center pb-2">Featured Products</h3>
@@ -76,7 +93,12 @@ function Prods() {
                     <Card.Body>
                       <Card.Title>{product.title}</Card.Title>
                       <Card.Text>USD {product.price}</Card.Text>
-                      <Button variant="outline-dark">Buy Now</Button>
+                      <Button
+                        variant="outline-dark"
+                        onClick={() => handleOpenModal(product)}
+                      >
+                        Learn More
+                      </Button>
                     </Card.Body>
                   </Card>
                 </Col>
@@ -92,6 +114,25 @@ function Prods() {
           </Col>
         </Row>
       </Container>
+      <Modal show={showModal} onHide={handleCloseModal} size="xl">
+        <Modal.Header closeButton>
+          <Modal.Title>Product Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row>
+              <Col xs={12} md={6} lg={6}>
+                <img src={selectedProduct?.image} alt={selectedProduct?.title} style={{ maxHeight: '70vh' }} />
+              </Col>
+              <Col xs={12} md={6} lg={6}>
+                <h4>{selectedProduct?.title}</h4>
+                <p>USD {selectedProduct?.price}</p>
+                <p>{selectedProduct?.description}</p>
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
     </section>
   );
 }

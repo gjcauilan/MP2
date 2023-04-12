@@ -76,6 +76,7 @@ function Prods() {
                     <Card.Body>
                       <Card.Title>{product.title}</Card.Title>
                       <Card.Text>USD {product.price}</Card.Text>
+                      <Button variant="outline-dark">Buy Now</Button>
                     </Card.Body>
                   </Card>
                 </Col>
